@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include "math.h"
 
 #define MAX_VAL_8       127
 #define MIN_VAL_8       -128
@@ -38,11 +39,19 @@ my_sint32 abs32(const my_sint32 a);
 my_sint32 neg32(const my_sint32 a);
 my_sint32 lsh32(const my_sint32 a, const my_sint32 b);
 my_sint32 rsh32(const my_sint32 a, const my_sint32 b);
+
 my_sint32 log2_fp(const my_sint32 a);
 
 
-my_float add8_f(const my_float a, const my_float b);
-my_float sub8_f(const my_float a, const my_float b);
-my_float mul8_f(const my_float a, const my_float b);
-my_float abs8_f(const my_float a);
-my_float neg8_f(const my_float a);
+my_float add_f(const my_float a, const my_float b);
+my_float sub_f(const my_float a, const my_float b);
+my_float mul_f(const my_float a, const my_float b);
+my_float mac_f(const my_float a, const my_float b, const my_float c);
+my_float msub_f(const my_float a, const my_float b, const my_float c);
+my_float abs_f(const my_float a);
+my_float neg_f(const my_float a);
+
+my_sint32 saturation(my_sint32* sum, my_sint32* term);
+
+my_uint32 float_To_Fixed(my_float floatNum);
+my_float fixed_To_Float(my_uint32 fixedNum);

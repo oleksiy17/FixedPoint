@@ -3,12 +3,15 @@
 
 int main()
 {
+    my_float x = 0.875;
+    printf("Float equal: %lf\n", x);
 
-    for (int i = 1; i < 500; i++)
-    {
-        printf("log2[%d] = %lf\n", i, log2f((float)i));
-    }
-   
- 
+    my_sint32 y = float_To_Fixed(x);
+    printf("Fixed equal: %d\n", y);
+
+    x = fixed_To_Float(y);
+    printf("Fixed - to - float:  %lf\n", x);
+
     return 0;
+
 }
