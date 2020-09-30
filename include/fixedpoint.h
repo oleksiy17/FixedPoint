@@ -15,7 +15,14 @@
 #define MIN_VAL_64      -9223372036854775808
 
 #define FRACTION_BASE   31
+#define ESTIMATE_Q16    16
 #define EMPTY_MASK      0x00000000
+#define T1              2.823529
+#define T2              1.882352
+#define NORM_FACTOR     0.15195522
+#define ESTIMATE        0x40000000
+#define ONE             0x7FFFFFFF
+#define ROUNDING_BIT    0x80000000
 
 typedef unsigned char           my_uint8;
 typedef unsigned short          my_uint16;
@@ -25,7 +32,7 @@ typedef unsigned long int       my_uint64;
 typedef signed char             my_sint8;
 typedef signed short            my_sint16;
 typedef signed int              my_sint32;
-typedef signed long int         my_sint64;
+typedef signed long long int    my_sint64;
 
 typedef float                   my_float;
 
@@ -39,9 +46,13 @@ my_sint32 abs32(const my_sint32 a);
 my_sint32 neg32(const my_sint32 a);
 my_sint32 lsh32(const my_sint32 a, const my_sint32 b);
 my_sint32 rsh32(const my_sint32 a, const my_sint32 b);
+my_sint32 div32(const my_sint32 numenator, const my_sint32 denuminator);
 
-my_sint32 log2_fp(const my_sint32 a);
+my_sint32 saturation32(my_sint32* sum, my_sint32* term);
+my_sint64 saturation64(my_sint64* sum, my_sint64* term);
 
+my_uint32 float_To_Fixed(my_float floatNum);
+my_float fixed_To_Float(my_uint32 fixedNum);
 
 my_float add_f(const my_float a, const my_float b);
 my_float sub_f(const my_float a, const my_float b);
@@ -50,8 +61,6 @@ my_float mac_f(const my_float a, const my_float b, const my_float c);
 my_float msub_f(const my_float a, const my_float b, const my_float c);
 my_float abs_f(const my_float a);
 my_float neg_f(const my_float a);
+my_float div_f(const my_float numenator, const my_float denuminator);
 
-my_sint32 saturation(my_sint32* sum, my_sint32* term);
-
-my_uint32 float_To_Fixed(my_float floatNum);
-my_float fixed_To_Float(my_uint32 fixedNum);
+my_sint32 log2_fp(const my_sint32 a);
