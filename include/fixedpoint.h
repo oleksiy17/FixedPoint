@@ -14,15 +14,17 @@
 #define MAX_VAL_64      9223372036854775807
 #define MIN_VAL_64      -9223372036854775808
 
-#define FRACTION_BASE   31
-#define ESTIMATE_Q16    16
+#define FRACTION_BASE   27
+#define ESTIMATE_Q20    20
+
 #define EMPTY_MASK      0x00000000
 #define T1              2.823529
 #define T2              1.882352
 #define NORM_FACTOR     0.15195522
-#define ESTIMATE        0x40000000
-#define ONE             0x7FFFFFFF
-#define ROUNDING_BIT    0x80000000
+#define ESTIMATE_VAL    0x80000
+#define ONE             0xFFFFF
+#define ROUNDING_BIT_32 0x80000000
+#define ROUNDING_BIT_64 0x80000000
 
 typedef unsigned char           my_uint8;
 typedef unsigned short          my_uint16;
@@ -48,6 +50,10 @@ my_sint32 lsh32(const my_sint32 a, const my_sint32 b);
 my_sint32 rsh32(const my_sint32 a, const my_sint32 b);
 my_sint32 div32(const my_sint32 numenator, const my_sint32 denuminator);
 
+my_sint64 add64(const my_sint64 a, const my_sint64 b);
+my_sint64 sub64(const my_sint64 a, const my_sint64 b);
+my_sint64 mul64(const my_sint64 a, const my_sint64 b);
+
 my_sint32 saturation32(my_sint32* sum, my_sint32* term);
 my_sint64 saturation64(my_sint64* sum, my_sint64* term);
 
@@ -63,4 +69,4 @@ my_float abs_f(const my_float a);
 my_float neg_f(const my_float a);
 my_float div_f(const my_float numenator, const my_float denuminator);
 
-my_sint32 log2_fp(const my_sint32 a);
+my_sint32 log2x(my_sint32 a);

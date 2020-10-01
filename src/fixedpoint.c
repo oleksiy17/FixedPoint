@@ -1,10 +1,12 @@
 ﻿#include "fixedpoint.h"
+#include "tables.h"
 
 /****************************************************
 *
 *           FIXED POINT MATH OPERATIONS
 *
 *****************************************************/
+
 
 my_sint32 add32(const my_sint32 a, const my_sint32 b)
 {
@@ -34,6 +36,33 @@ my_sint32 sub32(const my_sint32 a, const my_sint32 b)
     return c;
 }
 
+my_sint64 add64(const my_sint64 a, const my_sint64 b)
+{
+    my_sint64 c;
+
+    c = a + b;
+
+    if (((a ^ b) & MIN_VAL_64) == 0)     //case for both positive or negative numbers
+    {
+        c = saturation64(&c, &a);
+    }
+
+    return c;   // positive + negative always returns right result
+}
+
+my_sint64 sub64(const my_sint64 a, const my_sint64 b)
+{
+    my_sint64 c;
+
+    c = a - b;
+
+    if (((a ^ b) & MIN_VAL_64))
+    {
+        c = saturation64(&c, &a);
+    }
+
+    return c;
+}
 
 my_sint32 mul32(const my_sint32 a, const my_sint32 b)
 {
@@ -45,7 +74,7 @@ my_sint32 mul32(const my_sint32 a, const my_sint32 b)
 
     prod = (my_sint64)a * (my_sint64)b;
     prod = prod << 1;
-    acc = prod + (my_sint64)ROUNDING_BIT; // rounding bit
+    acc = prod + (my_sint64)ROUNDING_BIT_32; // rounding bit
 
     if (((prod ^ (my_sint64)MAX_VAL_32) & MIN_VAL_64) == 0) //
     {
@@ -55,6 +84,18 @@ my_sint32 mul32(const my_sint32 a, const my_sint32 b)
     c = (my_sint32)(acc >> FRACTION_BASE+1);
 
     return c;
+}
+
+
+my_sint64 mul64(const my_sint64 a, const my_sint64 b)
+{
+    my_sint64 prod ;
+ 
+    prod = a * b;
+
+    prod = prod >> ESTIMATE_Q20;
+
+    return prod;
 }
 
 my_sint64 mac32(const my_sint32 a, const my_sint32 b, const my_sint64 c)
@@ -288,57 +329,47 @@ my_float neg_f(const my_float a)
 my_sint32 div32(const my_sint32 numenator, const my_sint32 denuminator)
 {
     my_uint32 i;
+    my_uint32 ret;
 
-    my_sint32 var_mul;
-    my_sint32 var_sub;
-
+    my_sint64 var_mul;
+    my_sint64 var_sub;
     my_sint64 estimate;
-    my_sint32 div;
 
-    estimate = ESTIMATE;
-    div = ONE;
+    my_sint64 new_denum = denuminator;                              // Q31 denuminator in 64 bit integer;
+    my_sint64 new_num = numenator;
 
-    for (i = 0; i < 5; i++)
+    new_denum = new_denum >> (FRACTION_BASE - ESTIMATE_Q20);        // Q20 denuminator in 64 integer
+    new_num = new_num >> (FRACTION_BASE - ESTIMATE_Q20);            // >> (31 - 20)
+    estimate = ESTIMATE_VAL;                                        // ESTIMATE_VAL = 0x80000
+
+    for (i = 0; i < 7; i++)
     {
         /*  x(n+1) = x(n) + x(n) * (1 - (denumenator * x(n))) */
 
-        var_mul = mul64(denuminator, estimate);     //  denumenator * x(n)
-        printf("denum * estimate = %f\n", fixed_To_Float(var_mul));
-
-        var_sub = sub32((my_sint32)ONE, var_mul);   //  1 - (denumenator * x(n))
-        printf("1 - (denumenator * x(n) = %f\n", fixed_To_Float(var_sub));
-
-        var_mul = mul32(estimate, var_sub);         //  x(n) * (1 - (denumenator * x(n)))
-        printf("x(n) * (1 - (denumenator * x(n)) = %f\n", fixed_To_Float(var_mul));
-
-        estimate = add32(estimate, var_mul);        //  x(n + 1) = x(n) + x(n) * (1 - (denumenator * x(n)))
-        printf("estimate %d = %f\n\n\n", i, fixed_To_Float(estimate));
+        var_mul = mul64(new_denum, estimate);     //  denumenator * x(n)
+        var_sub = sub64((my_sint32)ONE, var_mul);   //  1 - (denumenator * x(n))
+        var_mul = mul64(estimate, var_sub);         //  x(n) * (1 - (denumenator * x(n)))
+        estimate = add64(estimate, var_mul);        //  x(n + 1) = x(n) + x(n) * (1 - (denumenator * x(n)))
     }
 
-    estimate = mul32(numenator, estimate);
+    estimate = mul64(new_num, estimate);
 
-    return estimate;
+    ret = estimate << (FRACTION_BASE - ESTIMATE_Q20);
 
-    /*my_float estimate;
-    my_float num;
-    my_float denum;
-
-    my_uint8 i;
-
-    num = (my_float)NORM_FACTOR * numenator;
-    denum = (my_float)NORM_FACTOR * denuminator;
-    estimate = (my_float)T1 - ((my_float)T2 * denum);
-    
-    for (i = 0; i < 15; i++)
-    {
-        estimate = estimate * (2 - (estimate * denum));
-    }
-
-    return (num * estimate);*/
+    return ret;
 }
 
 my_float div_f(const my_float numenator, const my_float denuminator)
 {
     my_float result = numenator / denuminator;
     return result;
+}
+
+
+my_sint32 log2x(my_sint32 a)
+{
+    my_sint32 new_a;
+
+    new_a = a >> 4;
+
 }
