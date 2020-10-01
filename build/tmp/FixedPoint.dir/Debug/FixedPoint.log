@@ -1,8 +1,0 @@
-﻿  main.c
-c:\fixedpoint\src\main.c(21): warning C4244: 'function': conversion from 'double' to 'float', possible loss of data
-c:\fixedpoint\src\main.c(6): warning C4305: 'initializing': truncation from 'double' to 'my_float'
-c:\fixedpoint\src\main.c(7): warning C4305: 'initializing': truncation from 'double' to 'my_float'
-  tables.c
-c:\fixedpoint\src\tables.c(3): warning C4244: 'initializing': conversion from 'double' to 'my_sint32', possible loss of data
-  Generating Code...
-  FixedPoint.vcxproj -> C:\FixedPoint\build\tmp\Debug\FixedPoint.exe
