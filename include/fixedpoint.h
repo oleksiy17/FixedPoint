@@ -14,8 +14,10 @@
 #define MAX_VAL_64      9223372036854775807
 #define MIN_VAL_64      -9223372036854775808
 
-#define FRACTION_BASE   27
+#define FRACTION_BASE   31
 #define ESTIMATE_Q20    20
+#define LOG_BASE        26
+#define POW_BASE        26
 
 #define EMPTY_MASK      0x00000000
 #define T1              2.823529

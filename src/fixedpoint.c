@@ -369,7 +369,23 @@ my_float div_f(const my_float numenator, const my_float denuminator)
 my_sint32 log2x(my_sint32 a)
 {
     my_sint32 new_a;
+    my_sint32 retval;
+    new_a = a >> 22;        // arrai InX
 
-    new_a = a >> 4;
+    retval = arr_log[new_a];
 
+    return retval;
 }
+
+my_sint32 pow2x(my_sint32 a)
+{
+    my_sint32 new_a;
+    my_sint32 retval;
+    new_a = a >> 22;        // arrai InX
+
+    retval = arr_pow[new_a];
+
+    return retval;
+}
+
+

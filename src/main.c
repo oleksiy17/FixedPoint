@@ -11,19 +11,23 @@ int main()
     my_sint32 bf = float_To_Fixed(b);
     my_sint32 cf = div32(af, bf);
 
-    printf("Fixed %f / %f = %f\n", a, b, fixed_To_Float(cf));
+    printf("%f\n", fixed_To_Float(-134217728));
 
-    int i = 0;
+
+    printf("%d\n", float_To_Fixed(0.456));
+    /*int i = 1;
     for (int k = 0; k < 52; k++)
     {
         for (int j = 0; j < 10; j++)
         {
-            printf("%d, ", float_To_Fixed( log2f((float)i / 512.0) ));
+            printf("%d, ", float_To_Fixed( powf((float)2, ((float)i / 512.0)) ));
           
             i++;
         }
         printf("\n");
-    }
+    }*/
+
+
     
   
 
