@@ -19,6 +19,8 @@
 #define LOG_BASE        26
 #define POW_BASE        26
 
+#define Q20_SHIFT       11
+
 #define EMPTY_MASK      0x00000000
 #define T1              2.823529
 #define T2              1.882352
@@ -59,8 +61,8 @@ my_sint64 mul64(const my_sint64 a, const my_sint64 b);
 my_sint32 saturation32(my_sint32* sum, my_sint32* term);
 my_sint64 saturation64(my_sint64* sum, my_sint64* term);
 
-my_uint32 float_To_Fixed(my_float floatNum);
-my_float fixed_To_Float(my_uint32 fixedNum);
+my_uint32 float_To_Fixed(my_float floatNum, my_uint8 shift);
+my_float fixed_To_Float(my_uint32 fixedNum, my_uint8 shift);
 
 my_float add_f(const my_float a, const my_float b);
 my_float sub_f(const my_float a, const my_float b);

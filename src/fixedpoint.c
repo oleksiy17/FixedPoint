@@ -69,8 +69,6 @@ my_sint32 mul32(const my_sint32 a, const my_sint32 b)
     my_sint64 acc;
     my_sint64 prod = 0;
     my_sint32 c;
-    my_sint32 mul_1 = a;
-    my_sint32 mul_2 = b;
 
     prod = (my_sint64)a * (my_sint64)b;
     prod = prod << 1;
@@ -81,7 +79,7 @@ my_sint32 mul32(const my_sint32 a, const my_sint32 b)
         acc = saturation64(&acc, &prod);
     }
 
-    c = (my_sint32)(acc >> FRACTION_BASE+1);
+    c = (my_sint32)(acc >> FRACTION_BASE + 1);
 
     return c;
 }
@@ -89,14 +87,16 @@ my_sint32 mul32(const my_sint32 a, const my_sint32 b)
 
 my_sint64 mul64(const my_sint64 a, const my_sint64 b)
 {
-    my_sint64 prod ;
- 
+    my_sint64 prod;
+
     prod = a * b;
 
     prod = prod >> ESTIMATE_Q20;
 
     return prod;
 }
+
+
 
 my_sint64 mac32(const my_sint32 a, const my_sint32 b, const my_sint64 c)
 {
@@ -261,15 +261,15 @@ my_sint64 saturation64(my_sint64* sum, my_sint64* term)
 *
 *****************************************************/
 
-my_sint32 float_To_Fixed(float floatNum)
+my_sint32 float_To_Fixed(float floatNum, my_uint8 shift)
 {
-    return (my_sint32)(floatNum * (1u << FRACTION_BASE));
+    return (my_sint32)(floatNum * (1u << shift));
 }
 
 
-my_float fixed_To_Float(my_sint32 fixedNum)
+my_float fixed_To_Float(my_sint32 fixedNum, my_uint8 shift)
 {
-    return ((my_float)fixedNum / (my_float)(1u << FRACTION_BASE));
+    return ((my_float)fixedNum / (my_float)(1u << shift));
 }
 
 
@@ -368,20 +368,24 @@ my_float div_f(const my_float numenator, const my_float denuminator)
 
 my_sint32 log2x(my_sint32 a)
 {
-    my_sint32 new_a;
-    my_sint32 retval;
-    new_a = a >> 22;        // arrai InX
+    my_sint32 i = (a >> 22);
+    my_sint32 idelta = (a & ((1 << 22) - 1));
 
-    retval = arr_log[new_a];
+    my_sint64 k = arr_log[i + 1] - arr_log[i];
+    k = (k * idelta) >> 22;
 
-    return retval;
+    printf("index: %d\n", i);
+
+    return arr_log[i] + k;
 }
 
 my_sint32 pow2x(my_sint32 a)
 {
-    my_sint32 new_a;
+    my_sint32 new_a = a;
     my_sint32 retval;
-    new_a = a >> 22;        // arrai InX
+    new_a = new_a >> 22;        // arrai InX
+
+
 
     retval = arr_pow[new_a];
 
