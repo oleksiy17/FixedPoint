@@ -18,7 +18,10 @@
 #define ESTIMATE_Q20    20
 #define LOG_BASE        26
 #define LOG_IDX_OFFSET  22
+#define POW_IDX_OFFSET  22
 #define POW_BASE        26
+
+#define Q31_TO_Q26      5
 
 #define Q20_SHIFT       11
 

@@ -1,0 +1,4 @@
+﻿  main.c
+c:\fixedpoint\src\main.c(6): warning C4305: 'initializing': truncation from 'double' to 'my_float'
+c:\fixedpoint\src\main.c(7): warning C4305: 'initializing': truncation from 'double' to 'my_float'
+  FixedPoint.vcxproj -> C:\FixedPoint\build\tmp\Debug\FixedPoint.exe

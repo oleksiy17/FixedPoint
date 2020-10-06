@@ -377,7 +377,7 @@ my_sint32 log2x(my_sint32 a)    // Input parameter in Q31
     Idx     = rsh32(a, (my_sint32)LOG_IDX_OFFSET);                              //  Find index of array by shifting right log value by 22
     units   = sub32(a, (my_uint32)lsh32(Idx, (my_sint32)LOG_IDX_OFFSET));       //  Find difference betveen number of units in given value and a nearest array value
     arr_dif = sub32(arr_log[Idx + 1], arr_log[Idx]);                            //  Find difference in nearest array values
-    delta   = mul64((my_sint64)arr_dif, (my_sint64)units, LOG_IDX_OFFSET);      //  Myltiplie number of units in given range on given range and divide it to total amount of units in range( shift right by 22 )
+    delta   = mul64((my_sint64)arr_dif, (my_sint64)units, (my_sint64)LOG_IDX_OFFSET);      //  Myltiplie number of units in given range on given range and divide it to total amount of units in range( shift right by 22 )
     result  = add32((my_sint32)delta, arr_log[Idx]);                            //  Add finded delta to nearest array value to complete interpolation
 
     return result;      //returning Q5.26 format
@@ -391,11 +391,11 @@ my_sint32 pow2x(my_sint32 a)            //input parameter in Q5.26
     my_sint64 delta;
     my_sint32 result;
 
-    Idx   = rsh32(a, (my_sint32)LOG_IDX_OFFSET);
-    units = sub32(a, (my_uint32)lsh32(Idx, (my_sint32)LOG_IDX_OFFSET));
+    Idx   = rsh32(a, (my_sint32)POW_IDX_OFFSET);
+    units = sub32(a, (my_uint32)lsh32(Idx, (my_sint32)POW_IDX_OFFSET));
     Idx   = -Idx;
     arr_dif = sub32(arr_pow[Idx], arr_pow[Idx + 1]);
-    delta = mul64((my_sint64)arr_dif, (my_sint64)units, LOG_IDX_OFFSET);
+    delta = mul64((my_sint64)arr_dif, (my_sint64)units, (my_sint64)POW_IDX_OFFSET);
     result = add32((my_sint32)delta, arr_pow[Idx]);
     
     return result;
@@ -404,30 +404,15 @@ my_sint32 pow2x(my_sint32 a)            //input parameter in Q5.26
 
 my_sint32 my_pow(my_sint32 a, my_sint32 x)
 {
-   /* my_sint64 log_val;
-    my_sint64 prod;
+    my_sint64 logRetVal;
+    my_sint64 powProd;
     my_sint32 result;
 
+    logRetVal = (my_sint64)log2x(a);
+    powProd = mul64((my_sint64)logRetVal, (my_sint64)(rsh32(x, Q31_TO_Q26)) , (my_sint64)POW_BASE);
+    result = (my_sint32)pow2x((my_sint32)powProd);
 
-    log_val = (my_sint64)log2x(a);
-    printf("log2(%f) = %f\n", fixed_To_Float(a, FRACTION_BASE), fixed_To_Float(log_val, LOG_BASE));
-    
-    log_val = log_val << 5;
-
-    prod = (my_sint64)log_val * (my_sint64)x;
-
-    prod = prod >> 31;
-
-    result = (my_sint32)prod;
-
-    printf("prod = %f", fixed_To_Float(result, FRACTION_BASE));
-
-    result = pow2x(result);
-
-    printf("result = %f", fixed_To_Float(result, FRACTION_BASE));
-
-
-    return result;*/
+    return result;
 }
 
 
