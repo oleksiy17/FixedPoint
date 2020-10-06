@@ -17,6 +17,7 @@
 #define FRACTION_BASE   31
 #define ESTIMATE_Q20    20
 #define LOG_BASE        26
+#define LOG_IDX_OFFSET  22
 #define POW_BASE        26
 
 #define Q20_SHIFT       11
@@ -56,7 +57,7 @@ my_sint32 div32(const my_sint32 numenator, const my_sint32 denuminator);
 
 my_sint64 add64(const my_sint64 a, const my_sint64 b);
 my_sint64 sub64(const my_sint64 a, const my_sint64 b);
-my_sint64 mul64(const my_sint64 a, const my_sint64 b);
+my_sint64 mul64(const my_sint64 a, const my_sint64 b, const my_sint64 shift);
 
 my_sint32 saturation32(my_sint32* sum, my_sint32* term);
 my_sint64 saturation64(my_sint64* sum, my_sint64* term);
@@ -74,3 +75,5 @@ my_float neg_f(const my_float a);
 my_float div_f(const my_float numenator, const my_float denuminator);
 
 my_sint32 log2x(my_sint32 a);
+my_sint32 pow2x(my_sint32 a);
+my_sint32 my_pow(my_sint32 a, my_sint32 x);
